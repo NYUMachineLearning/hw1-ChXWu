@@ -26,7 +26,7 @@ library(fastICA)
 
 ```{r}
 # read in Auto data
-Auto_data <- read_csv("/Users/ay1392/Desktop/Auto.csv")
+Auto_data <- read_csv("Auto.csv")
 
 #remove cars with unknown horsepower and set horsepower to numeric
 Auto_data <- Auto_data %>% 
@@ -120,7 +120,7 @@ plot(tree)
 
 There is one more element to hierarchical clustering: Cutting the tree. Here, we can control how many clusters we want or the height of the tree. 
 ```{r}
-#help(cutree)
+help(cutree)
 
 # cut tree into 3 clusters
 tree <- hclust(hierarchical_dist, method="average")
@@ -272,6 +272,9 @@ data(iris)
 ```
 
 0. Subset the Iris dataset to only include `Sepal.Length`, `Sepal.Width`, `Petal.Length`, and `Petal.Width`. 
+```{r}
+iris_subset <- iris[c('Sepal.Length', 'Sepal.Width', 'Petal.Length')]
+```
 
 1. Write out the Kmeans algorithm by hand, and run two iterations of it. 
 
