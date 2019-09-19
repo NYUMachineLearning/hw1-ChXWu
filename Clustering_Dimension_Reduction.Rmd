@@ -337,7 +337,7 @@ pca_iris = prcomp(iris_subset)
 autoplot(pca_iris)
 ```
 3. Run ICA on the Iris dataset. Plot the independent components as a heatmap.
-```{r}
+```{r, message= FALSE, echo=FALSE, results='hide'}
 a <- fastICA(iris_subset, 3, alg.typ = "parallel", fun = "logcosh", alpha = 1,
              method = "R", row.norm = FALSE, maxit = 200,
              tol = 0.0001, verbose = TRUE)
