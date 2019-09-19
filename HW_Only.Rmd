@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE, eval = T)
 
 ## Homework
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,message=FALSE}
 rm(list = ls(all.names = TRUE))
 library(ggplot2)
 library(tidyverse)
@@ -39,6 +39,7 @@ Assume k = 2, We start with the first points in the dataset
 d = as.matrix(dist(iris_subset))
 cood = which(d == max(d), arr.ind = TRUE)
 centroids = rbind(iris_subset[cood[1],], iris_subset[cood[2],])
+print(centroids)
 ```
 
 
@@ -55,15 +56,15 @@ for (i in 1:150){
     cluster_two = rbind(cluster_two, iris_subset[i,])
   }
 }
-head(cluster_one)
-head(cluster_two)
+nrow(cluster_one)
+nrow(cluster_two)
 ```
 
 
 ```{r}
 # recalculate the centroids 
 centroids = rbind(t(as.matrix(colMeans(cluster_one))),t(as.matrix(colMeans(cluster_two))))
-
+print(centroids)
 # and again assign the point to cluster with closer centroid(second iteration)
 cluster_one = c()
 cluster_two = c()
@@ -76,8 +77,8 @@ for (i in 1:150){
     cluster_two = rbind(cluster_two, iris_subset[i,])
   }
 }
-head(cluster_one)
-head(cluster_two)
+nrow(cluster_one)
+nrow(cluster_two)
 ```
 
 
@@ -90,8 +91,8 @@ autoplot(pca_iris)
 
 3. Run ICA on the Iris dataset. Plot the independent components as a heatmap.
 
-```{r, message= FALSE, echo=FALSE, results='hide'}
-a <- fastICA(iris_subset, 3, alg.typ = "parallel", fun = "logcosh", alpha = 1,
+```{r, message= FALSE, results='hide'}
+a <- fastICA(iris_subset, 4, alg.typ = "parallel", fun = "logcosh", alpha = 1,
              method = "R", row.norm = FALSE, maxit = 200,
              tol = 0.0001, verbose = TRUE)
 heatmap(a$S)
@@ -145,31 +146,35 @@ autoplot(prcomp(iris_subset), data = iris, colour = a$cluster)
 
   * Using this clustering, color the PCA plot according to the clusters. (6  plots in total)
 
-```{r}
+```{r, warning= FALSE}
 hierarchical_dist <- dist(iris_subset, method = "euclidean")
 tree1 <- hclust(hierarchical_dist, method="average")
+plot(tree1)
 tree2 <- hclust(hierarchical_dist, method="complete")
+plot(tree2)
 hierarchical_dist <- dist(iris_subset, method = "manhattan")
 tree3 <- hclust(hierarchical_dist, method="average")
-tree4 <- hclust(hierarchical_dist, method="complete")
-  
-
-plot(tree1)
-plot(tree2)
 plot(tree3)
+tree4 <- hclust(hierarchical_dist, method="complete")
 plot(tree4)
+rect.hclust(tree4, k = 2, h = NULL)
+cutree(tree4, 2)
 
-cutree(tree1, 2)
-cutree(tree1, 3)
+plot(tree4)
+rect.hclust(tree4, k = 3, h = NULL)
+cutree(tree4, 3)
 
-autoplot(prcomp(iris_subset), data = iris, colour = cutree(tree1, 2))
-autoplot(prcomp(iris_subset), data = iris, colour = cutree(tree1, 3))
-autoplot(prcomp(iris_subset), data = iris, colour = cutree(tree2, 2))
-autoplot(prcomp(iris_subset), data = iris, colour = cutree(tree2, 3))
-autoplot(prcomp(iris_subset), data = iris, colour = cutree(tree3, 2))
-autoplot(prcomp(iris_subset), data = iris, colour = cutree(tree3, 3))
-autoplot(prcomp(iris_subset), data = iris, colour = cutree(tree4, 2))
-autoplot(prcomp(iris_subset), data = iris, colour = cutree(tree4, 3))
+plot(tree4)
+rect.hclust(tree4, k = 4, h = NULL)
+cutree(tree4, 4)
+
+autoplot(prcomp(iris_subset), colour = cutree(tree1, 2))
+autoplot(prcomp(iris_subset), colour = cutree(tree2, 2))
+autoplot(prcomp(iris_subset), colour = cutree(tree3, 2))
+autoplot(prcomp(iris_subset), colour = cutree(tree4, 2))
+autoplot(prcomp(iris_subset), colour = cutree(tree4, 3))
+autoplot(prcomp(iris_subset), colour = cutree(tree4, 4))
+
 
 ``` 
 
